@@ -30,7 +30,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.1.0",
     "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^4.0.0",
     "@rollup/plugin-typescript": "^8.3.3",
     "@types/react": "16.14.0",
@@ -43,8 +43,9 @@
   },
   "dependencies": {
     "@cloudflare/speedtest": "^1.3.0",
-    "decky-frontend-lib": "^3.24.5",
-    "react-icons": "^4.4.0"
+    "decky-frontend-lib": "^3.25.0",
+    "react-icons": "^4.4.0",
+    "recharts": "^2.12.7"
   },
   "pnpm": {
     "peerDependencyRules": {

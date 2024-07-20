@@ -1,25 +1,13 @@
-import {
-  ButtonItem,
-  definePlugin,
-  DialogButton,
-  Menu,
-  MenuItem,
-  Navigation,
-  PanelSection,
-  PanelSectionRow,
-  ServerAPI,
-  showContextMenu,
-  staticClasses,
-} from "decky-frontend-lib";
+import { definePlugin, ServerAPI, staticClasses } from "decky-frontend-lib";
 import { VFC } from "react";
 import { SiSpeedtest } from "react-icons/si";
+import { Main } from "./pages/main";
+import SpeedTestEngine from "@cloudflare/speedtest";
 
-// interface AddMethodArgs {
-//   left: number;
-//   right: number;
-// }
-
-const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
+const Content: VFC<{ serverAPI: ServerAPI; engine: SpeedTestEngine }> = ({
+  serverAPI,
+  engine,
+}) => {
   // const [result, setResult] = useState<number | undefined>();
 
   // const onClick = async () => {
@@ -35,12 +23,12 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
   //   }
   // };
 
-  return <Main />;
+  return <Main engine={engine} />;
 };
 
 // const DeckyPluginRouterTest: VFC = () => {
 //   return (
-//     <div style={{ marginTop: "50px", color: "white" }}>
+//     <div style={{ marginTop: "50px", color: "white" }}
 //       Hello World!
 //       <DialogButton onClick={() => Navigation.NavigateToLibraryTab()}>
 //         Go to Library
@@ -50,13 +38,14 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
 // };
 
 export default definePlugin((serverApi: ServerAPI) => {
-  serverApi.routerHook.addRoute("/decky-speed-test", DeckyPluginRouterTest, {
-    exact: true,
-  });
+  const engine = new SpeedTestEngine({ autoStart: false });
+  // serverApi.routerHook.addRoute("/decky-speed-test", DeckyPluginRouterTest, {
+  //   exact: true,
+  // });
 
   return {
     title: <div className={staticClasses.Title}>Speed Test</div>,
-    content: <Content serverAPI={serverApi} />,
+    content: <Content serverAPI={serverApi} engine={engine} />,
     icon: <SiSpeedtest />,
     onDismount() {
       serverApi.routerHook.removeRoute("/decky-speed-test");
