@@ -1,5 +1,6 @@
 import { definePlugin, ServerAPI, staticClasses } from "decky-frontend-lib";
 import { SiSpeedtest } from "react-icons/si";
+import { MdError } from "react-icons/md";
 import { Main } from "./pages/main";
 import SpeedTestEngine from "@cloudflare/speedtest";
 
@@ -20,15 +21,26 @@ export default definePlugin((serverAPI: ServerAPI) => {
   const engine = new SpeedTestEngine({ autoStart: false });
   const backend = new Backend(engine, serverAPI);
 
-  backend.saveResultsOnFinish(() => {
-    serverAPI.toaster.toast({
-      body: <div>Results saved</div>,
-      title: "Speed Test: completed",
-      icon: <SiSpeedtest />,
-      duration: 4 * 1000,
-      critical: false,
-    });
-  });
+  backend.saveResultsOnFinish(
+    () => {
+      serverAPI.toaster.toast({
+        body: <div>Results saved</div>,
+        title: "Speed Test: Completed",
+        icon: <SiSpeedtest />,
+        duration: 6 * 1000,
+        critical: false,
+      });
+    },
+    () => {
+      serverAPI.toaster.toast({
+        body: <div>Failed to complete, restart Steam</div>,
+        title: "Speed Test: Failed",
+        icon: <SiSpeedtest />,
+        duration: 8 * 1000,
+        critical: false,
+      });
+    }
+  );
 
   // serverApi.routerHook.addRoute("/decky-speed-test", DeckyPluginRouterTest, {
   //   exact: true,

@@ -47,7 +47,7 @@ export class Backend {
     this.LatestTestResults = res;
   }
 
-  public saveResultsOnFinish(toast: () => void) {
+  public saveResultsOnFinish(toast: () => void, toastErr: () => void) {
     this.engine.onFinish = (results) => {
       const {
         download,
@@ -114,6 +114,9 @@ export class Backend {
           .catch((e) => {
             console.log("Failed to save results:" + JSON.stringify(e));
           });
+      } else {
+        console.log("Speed Test: failed to complete test");
+        toastErr();
       }
     };
   }
