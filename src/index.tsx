@@ -1,30 +1,9 @@
 import { definePlugin, ServerAPI, staticClasses } from "decky-frontend-lib";
-import { VFC } from "react";
 import { SiSpeedtest } from "react-icons/si";
 import { Main } from "./pages/main";
 import SpeedTestEngine from "@cloudflare/speedtest";
 
-const Content: VFC<{ serverAPI: ServerAPI; engine: SpeedTestEngine }> = ({
-  serverAPI,
-  engine,
-}) => {
-  // const [result, setResult] = useState<number | undefined>();
-
-  // const onClick = async () => {
-  //   const result = await serverAPI.callPluginMethod<AddMethodArgs, number>(
-  //     "add",
-  //     {
-  //       left: 2,
-  //       right: 2,
-  //     }
-  //   );
-  //   if (result.success) {
-  //     setResult(result.result);
-  //   }
-  // };
-
-  return <Main engine={engine} />;
-};
+import { Backend } from "./app/backend";
 
 // const DeckyPluginRouterTest: VFC = () => {
 //   return (
@@ -37,18 +16,30 @@ const Content: VFC<{ serverAPI: ServerAPI; engine: SpeedTestEngine }> = ({
 //   );
 // };
 
-export default definePlugin((serverApi: ServerAPI) => {
+export default definePlugin((serverAPI: ServerAPI) => {
   const engine = new SpeedTestEngine({ autoStart: false });
+  const backend = new Backend(engine, serverAPI);
+
+  backend.saveResultsOnFinish(() => {
+    serverAPI.toaster.toast({
+      body: <div>Results saved</div>,
+      title: "Speed Test: completed",
+      icon: <SiSpeedtest />,
+      duration: 4 * 1000,
+      critical: false,
+    });
+  });
+
   // serverApi.routerHook.addRoute("/decky-speed-test", DeckyPluginRouterTest, {
   //   exact: true,
   // });
 
   return {
     title: <div className={staticClasses.Title}>Speed Test</div>,
-    content: <Content serverAPI={serverApi} engine={engine} />,
+    content: <Main backend={backend} />,
     icon: <SiSpeedtest />,
     onDismount() {
-      serverApi.routerHook.removeRoute("/decky-speed-test");
+      serverAPI.routerHook.removeRoute("/decky-speed-test");
     },
   };
 });

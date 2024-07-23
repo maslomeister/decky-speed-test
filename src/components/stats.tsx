@@ -1,32 +1,11 @@
 import { useEffect, useState } from "react";
 import { BandwidthPoint, Graph } from "./graph";
-import SpeedTestEngine from "@cloudflare/speedtest";
 import { ButtonItem, Field, PanelSectionRow } from "decky-frontend-lib";
 import { FaInfoCircle } from "react-icons/fa";
-
-function convertBpsToMbps(bps: number): number {
-  return Math.round(bps / 1000000); // 1 Mbps = 1,000,000 bps
-}
-
-function getColor(value: number): string {
-  if (value < 2) {
-    return "#FF6557";
-  }
-
-  if (value === 2) {
-    return "#ffffff";
-  }
-
-  if (value > 2) {
-    return "#57C042";
-  }
-
-  return "#ffffff";
-}
-
-type Props = {
-  engine: SpeedTestEngine;
-};
+import { VerticalContainer } from "./vertical-container";
+import { Backend, LatestResult, LatestResultFetch } from "../app/backend";
+import { LatestResults } from "./latest-results";
+import { convertBpsToMbps, getColor } from "../utils";
 
 type AIM = {
   name: string;
@@ -35,10 +14,15 @@ type AIM = {
   classificationName: "bad" | "poor" | "average" | "good" | "great";
 };
 
-export const Stats = ({ engine }: Props) => {
+type Props = {
+  backend: Backend;
+};
+
+export const Stats = ({ backend }: Props) => {
   const [startTest, setStartTest] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
+  const [error, setError] = useState("");
 
   const [dlPoints, setDlPoints] = useState<BandwidthPoint[]>();
   const [upPoints, setUpPoints] = useState<BandwidthPoint[]>();
@@ -49,19 +33,21 @@ export const Stats = ({ engine }: Props) => {
   const [jitter, setJitter] = useState<number | undefined>();
   const [aimScores, setAimScores] = useState<AIM[] | null>(null);
 
+  const [latestResult, setLatestResult] = useState<LatestResultFetch>();
+
   const CollectEngineStats = () => {
-    engine.onResultsChange = () => {
-      if (!engine.isFinished) {
-        setDlPoints(engine.results.getDownloadBandwidthPoints());
-        setUpPoints(engine.results.getUploadBandwidthPoints());
-        const download = engine.results.getDownloadBandwidth();
-        const upload = engine.results.getUploadBandwidth();
+    backend.engine.onResultsChange = () => {
+      if (!backend.engine.isFinished) {
+        setDlPoints(backend.engine.results.getDownloadBandwidthPoints());
+        setUpPoints(backend.engine.results.getUploadBandwidthPoints());
+        const download = backend.engine.results.getDownloadBandwidth();
+        const upload = backend.engine.results.getUploadBandwidth();
 
-        const latencyDown = engine.results.getDownLoadedLatency();
-        const latencyUp = engine.results.getUpLoadedLatency();
+        const latencyDown = backend.engine.results.getDownLoadedLatency();
+        const latencyUp = backend.engine.results.getUpLoadedLatency();
 
-        const jitterDown = engine.results.getDownLoadedJitter();
-        const jitterUp = engine.results.getUpLoadedJitter();
+        const jitterDown = backend.engine.results.getDownLoadedJitter();
+        const jitterUp = backend.engine.results.getUpLoadedJitter();
 
         if (download) {
           setDownload(convertBpsToMbps(download));
@@ -75,61 +61,66 @@ export const Stats = ({ engine }: Props) => {
         if (jitterDown && jitterUp) {
           setJitter(Math.round((jitterDown + jitterUp) / 2));
         }
-      }
-    };
+      } else {
+        setIsFinished(true);
+        setIsRunning(false);
 
-    engine.onFinish = (results) => {
-      setIsFinished(true);
-      setIsRunning(false);
-
-      const aimScores = Object.entries(results.getScores()).map(
-        ([key, value]) => ({
+        const aimScores = Object.entries(
+          backend.engine.results.getScores()
+        ).map(([key, value]) => ({
           name: key,
           ...value,
-        })
-      );
+        }));
 
-      setAimScores(aimScores);
+        setAimScores(aimScores);
 
-      const {
-        download,
-        upload,
-        downLoadedLatency,
-        upLoadedLatency,
-        downLoadedJitter,
-        upLoadedJitter,
-      } = results.getSummary();
+        const {
+          download,
+          upload,
+          downLoadedLatency,
+          upLoadedLatency,
+          downLoadedJitter,
+          upLoadedJitter,
+        } = backend.engine.results.getSummary();
 
-      if (download) {
-        setDownload(convertBpsToMbps(download));
-      }
-      if (upload) {
-        setUpload(convertBpsToMbps(upload));
-      }
-      if (downLoadedLatency && upLoadedLatency) {
-        setLatency(Math.round((downLoadedLatency + upLoadedLatency) / 2));
-      }
-      if (downLoadedJitter && upLoadedJitter) {
-        setJitter(Math.round((downLoadedJitter + upLoadedJitter) / 2));
+        if (
+          download &&
+          upload &&
+          downLoadedJitter &&
+          upLoadedJitter &&
+          downLoadedLatency &&
+          upLoadedLatency &&
+          download > 0 &&
+          upload > 0 &&
+          downLoadedJitter > 0 &&
+          upLoadedJitter > 0 &&
+          downLoadedLatency > 0 &&
+          upLoadedLatency > 0
+        ) {
+          setDownload(convertBpsToMbps(download));
+
+          setUpload(convertBpsToMbps(upload));
+
+          setLatency(Math.round((downLoadedLatency + upLoadedLatency) / 2));
+
+          setJitter(Math.round((downLoadedJitter + upLoadedJitter) / 2));
+        } else {
+          setError("Wasn't able to complete speed test, try restarting steam");
+        }
       }
     };
   };
 
   const Play = () => {
-    if (engine.isFinished) {
-      engine.restart();
+    if (backend.engine.isFinished) {
+      backend.engine.restart();
+      setError("");
     } else {
-      engine.play();
+      backend.engine.play();
     }
 
     setIsRunning(true);
   };
-
-  useEffect(() => {
-    if (engine.isRunning) {
-      setIsRunning(true);
-    }
-  }, []);
 
   useEffect(() => {
     if (isRunning) {
@@ -143,6 +134,16 @@ export const Stats = ({ engine }: Props) => {
       console.log("started speed test");
     }
   }, [startTest]);
+
+  useEffect(() => {
+    if (backend.engine.isRunning) {
+      setIsRunning(true);
+    }
+    if (backend.LatestTestResults !== null) {
+      console.log(backend.LatestTestResults);
+      setLatestResult(backend.LatestTestResults);
+    }
+  }, []);
 
   const dlInMbps = dlPoints?.map((item) => {
     return {
@@ -168,8 +169,12 @@ export const Stats = ({ engine }: Props) => {
         </PanelSectionRow>
       )}
 
+      {latestResult && latestResult.msg && !isRunning && !isFinished && (
+        <LatestResults results={latestResult.data} />
+      )}
+
       {(isRunning || isFinished) && (
-        <div style={{ fontWeight: 600 }}>
+        <div style={{ fontWeight: 600, paddingBottom: "8px" }}>
           <PanelSectionRow>
             <Field
               label="STATUS"
@@ -183,7 +188,17 @@ export const Stats = ({ engine }: Props) => {
         </div>
       )}
 
-      {(isRunning || isFinished) && (
+      {error && (
+        <VerticalContainer style={{ padding: "16px 0" }}>
+          <div
+            style={{ fontSize: "16px", textAlign: "center", fontWeight: 600 }}
+          >
+            {error.toUpperCase()}
+          </div>
+        </VerticalContainer>
+      )}
+
+      {error === "" && (isRunning || isFinished) && (
         <>
           <PanelSectionRow>
             <Field label="DOWNLOAD" inlineWrap="keep-inline" focusable>
@@ -240,10 +255,10 @@ export const Stats = ({ engine }: Props) => {
             </div>
           )}
 
-          {isFinished &&
-            aimScores !== null &&
-            aimScores.map((item) => (
-              <div style={{ paddingBottom: "16px" }}>
+          <div style={{ paddingBottom: "16px" }}>
+            {isFinished &&
+              aimScores !== null &&
+              aimScores.map((item) => (
                 <PanelSectionRow>
                   <Field label={item.name.toUpperCase()} focusable>
                     <div
@@ -256,11 +271,11 @@ export const Stats = ({ engine }: Props) => {
                     </div>
                   </Field>
                 </PanelSectionRow>
-              </div>
-            ))}
+              ))}
+          </div>
         </>
       )}
-      {isFinished && (
+      {isFinished && !error && (
         <PanelSectionRow>
           <ButtonItem onClick={() => setStartTest(true)} layout="below">
             REPEAT TEST
