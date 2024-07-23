@@ -114,6 +114,11 @@ export const Stats = ({ backend }: Props) => {
   const Play = () => {
     if (backend.engine.isFinished) {
       backend.engine.restart();
+      setDownload(undefined);
+      setUpload(undefined);
+      setLatency(undefined);
+      setJitter(undefined);
+      setIsFinished(false);
       setError("");
     } else {
       backend.engine.play();
@@ -131,7 +136,6 @@ export const Stats = ({ backend }: Props) => {
   useEffect(() => {
     if (startTest) {
       Play();
-      console.log("started speed test");
     }
   }, [startTest]);
 
@@ -277,7 +281,7 @@ export const Stats = ({ backend }: Props) => {
       )}
       {isFinished && !error && (
         <PanelSectionRow>
-          <ButtonItem onClick={() => setStartTest(true)} layout="below">
+          <ButtonItem onClick={() => Play()} layout="below">
             REPEAT TEST
           </ButtonItem>
         </PanelSectionRow>
