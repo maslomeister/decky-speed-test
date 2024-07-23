@@ -3,7 +3,7 @@ import { BandwidthPoint, Graph } from "./graph";
 import { ButtonItem, Field, PanelSectionRow } from "decky-frontend-lib";
 import { FaInfoCircle } from "react-icons/fa";
 import { VerticalContainer } from "./vertical-container";
-import { Backend, LatestResult, LatestResultFetch } from "../app/backend";
+import { Backend, LatestResultFetch } from "../app/backend";
 import { LatestResults } from "./latest-results";
 import { convertBpsToMbps, getColor } from "../utils";
 

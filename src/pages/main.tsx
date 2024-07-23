@@ -1,9 +1,4 @@
-import {
-  ButtonItem,
-  PanelSection,
-  PanelSectionRow,
-  Spinner,
-} from "decky-frontend-lib";
+import { PanelSection, Spinner } from "decky-frontend-lib";
 import { Stats } from "../components/stats";
 import { VFC, useEffect, useState } from "react";
 import { Backend, LatestResultFetch } from "../app/backend";
