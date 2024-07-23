@@ -1,10 +1,10 @@
 {
-  "name": "Speed Test",
+  "name": "SpeedTest",
   "author": "maslomeister",
   "flags": [],
   "publish": {
     "tags": ["utility", "speed test", "cloudflare"],
-    "description": "Measure internet speed of your device using speed.cloudflare.com",
+    "description": "Measure internet speed of your steam deck using speedtest by cloudflare",
     "image": "https://opengraph.githubassets.com/1/SteamDeckHomebrew/PluginLoader"
   }
 }

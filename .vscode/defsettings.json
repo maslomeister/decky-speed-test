@@ -5,6 +5,6 @@
   "deckpass": "ssap",
   "deckkey": "-i ${env:HOME}/.ssh/id_rsa",
   "deckdir": "/home/deck",
-  "pluginname": "Speed Test",
+  "pluginname": "SpeedTest",
   "python.analysis.extraPaths": ["./py_modules"]
 }
