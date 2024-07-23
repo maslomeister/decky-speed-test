@@ -1,6 +1,10 @@
 # Speed Test plugin for Decky
 
 <p float="left">
+  
+<img src="https://github.com/maslomeister/decky-speed-test/blob/main/assets/plugin1.jpg?raw=true" width="300" />
+<img src="https://github.com/maslomeister/decky-speed-test/blob/main/assets/plugin2.jpg?raw=true" width="300" />
+<img src="https://github.com/maslomeister/decky-speed-test/blob/main/assets/plugin3.jpg?raw=true" width="300" />
 
 </p>
 
@@ -8,8 +12,7 @@
 
 Speed Test is a plugin for [Decky](https://github.com/SteamDeckHomebrew/decky-loader) that can perform speed tests on your steam deck using [cloudflares speedtest package](https://github.com/cloudflare/speedtest), the results of each test saved locally.
 
-- Saves results of speed test on completion to local db
-- After test is started plugin window can be closed, the result will be saved on completion
+- After speed test is started plugin window can be closed and reopened, the result will be saved on completion independent of plugin visibility
 
 ## 💪 Todo
 
