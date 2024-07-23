@@ -20,7 +20,7 @@ Speed Test is a plugin for [Decky](https://github.com/SteamDeckHomebrew/decky-lo
 - [ ] Add ability to view all performed speed tests in a paginated form
 - [ ] onClick popup with description for speed test metrics
 
-## Known issues
+## ⭕️ Known issues
 
 ### Speed test fails to start/complete
 
