@@ -1,10 +1,10 @@
 import { definePlugin, ServerAPI, staticClasses } from "decky-frontend-lib";
 import { SiSpeedtest } from "react-icons/si";
-import { MdError } from "react-icons/md";
 import { Main } from "./pages/main";
 import SpeedTestEngine from "@cloudflare/speedtest";
 
 import { Backend } from "./app/backend";
+// import { VFC } from "react";
 
 // const DeckyPluginRouterTest: VFC = () => {
 //   return (
@@ -42,16 +42,31 @@ export default definePlugin((serverAPI: ServerAPI) => {
     }
   );
 
-  // serverApi.routerHook.addRoute("/decky-speed-test", DeckyPluginRouterTest, {
-  //   exact: true,
-  // });
+  // const DeckyPluginRouterTest: VFC = () => {
+  //   return (
+  //     <div style={{ marginTop: "50px", color: "white" }}>
+  //       Hello World!
+  //       <DialogButton onClick={() => Navigation.NavigateToLibraryTab()}>
+  //         Go to Library
+  //       </DialogButton>
+  //     </div>
+  //   );
+  // };
+
+  // serverAPI.routerHook.addRoute(
+  //   "/decky-speed-test/download",
+  //   DeckyPluginRouterTest,
+  //   {
+  //     exact: true,
+  //   }
+  // );
 
   return {
     title: <div className={staticClasses.Title}>Speed Test</div>,
     content: <Main backend={backend} />,
     icon: <SiSpeedtest />,
     onDismount() {
-      serverAPI.routerHook.removeRoute("/decky-speed-test");
+      // serverAPI.routerHook.removeRoute("/decky-speed-test");
     },
   };
 });

@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import { BandwidthPoint, Graph } from "./graph";
-import { ButtonItem, Field, PanelSectionRow } from "decky-frontend-lib";
+import {
+  ButtonItem,
+  ConfirmModal,
+  Field,
+  Navigation,
+  PanelSectionRow,
+  showModal,
+} from "decky-frontend-lib";
 import { FaInfoCircle } from "react-icons/fa";
 import { VerticalContainer } from "./vertical-container";
 import { Backend, LatestResultFetch } from "../app/backend";
@@ -205,31 +212,103 @@ export const Stats = ({ backend }: Props) => {
       {error === "" && (isRunning || isFinished) && (
         <>
           <PanelSectionRow>
-            <Field label="DOWNLOAD" inlineWrap="keep-inline" focusable>
+            <Field
+              label="DOWNLOAD"
+              icon={<FaInfoCircle />}
+              inlineWrap="keep-inline"
+              onClick={() => {
+                showModal(
+                  <ConfirmModal
+                    strTitle="Download"
+                    strOKButtonText="Got it"
+                    bAlertDialog
+                  >
+                    <div style={{ paddingBottom: "8px" }}>
+                      Download determines how fast your network connection can
+                      get data from the test network. This is important when
+                      downloading large files such as updates for applications
+                      or streaming video services. Download speed is tested by
+                      downloading files of various sizes.
+                    </div>
+                    <div>
+                      The number reported represents the 90th percentile of all
+                      download measurements and not the absolute maximum.
+                    </div>
+                  </ConfirmModal>
+                );
+              }}
+            >
               {download && (
                 <div style={{ fontWeight: 600 }}>{download} Mbps</div>
               )}
             </Field>
           </PanelSectionRow>
-
           {isRunning && dlInMbps && dlInMbps.length > 2 && (
             <Graph data={dlInMbps} />
           )}
-
           <PanelSectionRow>
-            <Field label="UPLOAD" inlineWrap="keep-inline" focusable>
+            <Field
+              label="UPLOAD"
+              inlineWrap="keep-inline"
+              icon={<FaInfoCircle />}
+              onClick={() => {
+                showModal(
+                  <ConfirmModal
+                    strTitle="Upload"
+                    strOKButtonText="Got it"
+                    bAlertDialog
+                  >
+                    <div style={{ paddingBottom: "8px" }}>
+                      Upload determines how fast your network connection can
+                      transfer data to the test network. This is especially
+                      important for applications such as FTP or if you are the
+                      source for a live video stream. Upload speed is tested by
+                      uploading files of various sizes.
+                    </div>
+                    <div>
+                      The number reported represents the 90th percentile of all
+                      upload measurements and not the absolute maximum. Scroll
+                      down to view details.
+                    </div>
+                  </ConfirmModal>
+                );
+              }}
+            >
               {upload && (
                 <div style={{ fontWeight: 600 }}>{upload ?? "?"} Mbps</div>
               )}
             </Field>
           </PanelSectionRow>
-
           {isRunning && upInMbps && upInMbps.length > 2 && (
             <Graph data={upInMbps} type="up" />
           )}
-
           <PanelSectionRow>
-            <Field label="PING" inlineWrap="keep-inline" focusable>
+            <Field
+              label="PING"
+              inlineWrap="keep-inline"
+              icon={<FaInfoCircle />}
+              onClick={() => {
+                showModal(
+                  <ConfirmModal
+                    strTitle="Ping"
+                    strOKButtonText="Got it"
+                    bAlertDialog
+                  >
+                    <div style={{ paddingBottom: "8px" }}>
+                      Round trip time latency (or RTT) is the time it takes for
+                      a packet to be sent from your computer to Cloudflare's
+                      network and back. It is especially important for
+                      applications such as gaming and video chat, where you want
+                      to be as up to date as possible.
+                    </div>
+                    <div>
+                      The number reported represents the median of all RTT
+                      measurements. Lower RTT is better.
+                    </div>
+                  </ConfirmModal>
+                );
+              }}
+            >
               {latency && (
                 <div style={{ fontWeight: 600 }}>{latency ?? "?"} ms</div>
               )}
@@ -237,13 +316,37 @@ export const Stats = ({ backend }: Props) => {
           </PanelSectionRow>
 
           <PanelSectionRow>
-            <Field label="JITTER" inlineWrap="keep-inline" focusable>
+            <Field
+              label="JITTER"
+              inlineWrap="keep-inline"
+              icon={<FaInfoCircle />}
+              onClick={() => {
+                showModal(
+                  <ConfirmModal
+                    strTitle="Jitter"
+                    strOKButtonText="Got it"
+                    bAlertDialog
+                  >
+                    <div style={{ paddingBottom: "8px" }}>
+                      Although median RTT is important, it only paints half the
+                      picture. RTT can go up and down from time to time, which
+                      is noticeable in applications like video chat, gaming, or
+                      streaming. Jitter gives you insight into how much
+                      variation we see in the RTT measurements.
+                    </div>
+                    <div>
+                      It's calculated as the average distance between
+                      consecutive RTT measurements. Lower jitter is better.
+                    </div>
+                  </ConfirmModal>
+                );
+              }}
+            >
               {jitter && (
                 <div style={{ fontWeight: 600 }}>{jitter ?? "?"} ms</div>
               )}
             </Field>
           </PanelSectionRow>
-
           {isFinished && (
             <div style={{ paddingTop: "16px", paddingBottom: "8px" }}>
               <PanelSectionRow>
@@ -251,14 +354,34 @@ export const Stats = ({ backend }: Props) => {
                   label="Summary scores"
                   description="Based on AIM score"
                   bottomSeparator="thick"
-                  focusable
+                  onClick={() => {
+                    showModal(
+                      <ConfirmModal
+                        strTitle="Summary Scores"
+                        onOK={() => {
+                          Navigation.NavigateToExternalWeb(
+                            "https://developers.cloudflare.com/speed/aim/"
+                          );
+                        }}
+                        strOKButtonText="Learn more"
+                      >
+                        <div style={{ paddingBottom: "8px" }}>
+                          Aggregated Internet Measurement (AIM) helps you
+                          understand your Internet quality to identify scenarios
+                          that your Internet connection is good or bad for.
+                          Typically, an Internet speed test provides you with
+                          upload and download speeds, which may not always
+                          provide a holistic view of your Internet quality.
+                        </div>
+                      </ConfirmModal>
+                    );
+                  }}
                 >
                   <FaInfoCircle />
                 </Field>
               </PanelSectionRow>
             </div>
           )}
-
           <div style={{ paddingBottom: "16px" }}>
             {isFinished &&
               aimScores !== null &&
