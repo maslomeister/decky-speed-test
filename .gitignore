@@ -35,6 +35,9 @@ Thumbs.db
 # Ignore built ts files
 dist/
 
+# Ignore db file when testing
+defaults/speed-test.db
+
 __pycache__/
 
 /.yalc
