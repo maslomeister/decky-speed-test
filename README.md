@@ -4,7 +4,6 @@
   
 <img src="https://github.com/maslomeister/decky-speed-test/blob/main/assets/plugin1.jpg?raw=true" width="300" />
 <img src="https://github.com/maslomeister/decky-speed-test/blob/main/assets/plugin2.jpg?raw=true" width="300" />
-<img src="https://github.com/maslomeister/decky-speed-test/blob/main/assets/plugin3.jpg?raw=true" width="300" />
 
 </p>
 
