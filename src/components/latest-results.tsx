@@ -73,19 +73,42 @@ export const LatestResults = ({ results }: Props) => {
                 bAlertDialog
               >
                 <p style={{ ...unstyled_p, paddingBottom: "8px" }}>
-                  <span style={{ fontWeight: 600 }}>Download</span> determines
-                  how fast your network connection can get data from the test
-                  network. This is important when downloading large files such
-                  as updates for applications or streaming video services.
-                  Download speed is tested by downloading files of various
-                  sizes.
+                  <div style={{ display: "inline-flex", paddingRight: "2px" }}>
+                    <TbWorldDownload
+                      style={{
+                        height: "1em",
+                        width: "1em",
+                        top: ".125em",
+                        position: "relative",
+                      }}
+                      color="#f6821f"
+                    />
+                  </div>
+                  <span style={{ fontWeight: 600 }}>Download </span>
+                  determines how fast your network connection can get data from
+                  the test network. This is important when downloading large
+                  files such as updates for applications or streaming video
+                  services. Download speed is tested by downloading files of
+                  various sizes.
                 </p>
                 <p style={{ ...unstyled_p, paddingBottom: "8px" }}>
-                  <span style={{ fontWeight: 600 }}>Upload</span> determines how
-                  fast your network connection can transfer data to the test
-                  network. This is especially important for applications such as
-                  FTP or if you are the source for a live video stream. Upload
-                  speed is tested by uploading files of various sizes.
+                  <div style={{ display: "inline-flex", paddingRight: "2px" }}>
+                    <TbWorldUpload
+                      style={{
+                        height: "1em",
+                        width: "1em",
+                        top: ".125em",
+                        position: "relative",
+                      }}
+                      color="#8d1eb1"
+                    />
+                  </div>
+                  <span style={{ fontWeight: 600 }}>Upload </span>
+                  determines how fast your network connection can transfer data
+                  to the test network. This is especially important for
+                  applications such as FTP or if you are the source for a live
+                  video stream. Upload speed is tested by uploading files of
+                  various sizes.
                 </p>
                 <div>
                   Both numbers reported represents the 90th percentile of all
