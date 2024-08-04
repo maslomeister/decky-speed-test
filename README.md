@@ -7,7 +7,7 @@
 
 </p>
 
-<img src="" width="600" />
+<img src="https://github.com/maslomeister/decky-speed-test/blob/main/assets/plugin3.jpg?raw=true" width="600" />
 
 ## About
 
