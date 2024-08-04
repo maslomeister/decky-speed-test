@@ -31,3 +31,19 @@ export function findNewDimensions(dimensions: {
 
   return { width: newWidth, height: newHeight };
 }
+
+export function getColor(value: number): string {
+  if (value < 2) {
+    return "#FF6557";
+  }
+
+  if (value === 2) {
+    return "#ffffff";
+  }
+
+  if (value > 2) {
+    return "#57C042";
+  }
+
+  return "#ffffff";
+}
