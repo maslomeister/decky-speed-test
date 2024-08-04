@@ -52,6 +52,31 @@ export function getColor(value: number): string {
   return "#ffffff";
 }
 
+export function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+
+  const year = date.getFullYear().toString().slice(2); // YY
+  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // MM
+  const day = date.getDate().toString().padStart(2, "0"); // DD
+  const hours = date.getHours().toString().padStart(2, "0"); // HH
+  const minutes = date.getMinutes().toString().padStart(2, "0"); // MM
+
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
+export function formatNames(name: string) {
+  switch (name.toLocaleUpperCase()) {
+    case "STREAMING":
+      return "VIDEO STREAMING";
+    case "GAMING":
+      return "ONLINE GAMING";
+    case "RTC":
+      return "VOICE CHATTING";
+  }
+
+  return name;
+}
+
 // credits to https://github.com/ma3a/SDH-PlayTime
 
 export const log = (...args: any[]) => {

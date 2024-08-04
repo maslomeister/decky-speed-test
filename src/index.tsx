@@ -6,8 +6,9 @@ import SpeedTestEngine from "@cloudflare/speedtest";
 import { Backend } from "./app/backend";
 import { Settings } from "./app/settings";
 import { LocatorProvider } from "./components/locator";
-import { SETTINGS_ROUTE } from "./pages/navigation";
+import { SETTINGS_ROUTE, VIEW_ALL_TESTS } from "./pages/navigation";
 import { SettingsPage } from "./pages/settings";
+import { AllResults } from "./pages/all-results";
 
 export default definePlugin((serverAPI: ServerAPI) => {
   const engine = new SpeedTestEngine({ autoStart: false });
@@ -41,6 +42,12 @@ export default definePlugin((serverAPI: ServerAPI) => {
     </LocatorProvider>
   ));
 
+  serverAPI.routerHook.addRoute(VIEW_ALL_TESTS, () => (
+    <LocatorProvider settings={settings}>
+      <AllResults backend={backend} />
+    </LocatorProvider>
+  ));
+
   return {
     title: <div className={staticClasses.Title}>Speed Test</div>,
     content: (
@@ -51,6 +58,7 @@ export default definePlugin((serverAPI: ServerAPI) => {
     icon: <SiSpeedtest />,
     onDismount() {
       serverAPI.routerHook.removeRoute(SETTINGS_ROUTE);
+      serverAPI.routerHook.removeRoute(VIEW_ALL_TESTS);
     },
   };
 });

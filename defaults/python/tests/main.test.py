@@ -94,9 +94,18 @@ class Plugin:
             print(format_exception(e))
             return e
 
+    async def fetch_paginated_results(self):
+        try:
+            results = self.dao.fetchPaginatedResults(16, 10)
+
+            print(results)
+        except Exception as e:
+            print(format_exception(e))
+            return e
+
 
 if __name__ == "__main__":
     plugin = Plugin()
     asyncio.run(plugin._main())
-    # asyncio.run(plugin.save_results(10, 20, 10, 10, "test"))
     asyncio.run(plugin.fetch_latest_result())
+    asyncio.run(plugin.fetch_paginated_results())

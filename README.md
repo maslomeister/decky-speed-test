@@ -7,6 +7,8 @@
 
 </p>
 
+<img src="" width="600" />
+
 ## About
 
 Speed Test is a plugin for [Decky](https://github.com/SteamDeckHomebrew/decky-loader) that can perform speed tests on your steam deck using [cloudflares speedtest package](https://github.com/cloudflare/speedtest), the results of each test saved locally.
@@ -16,7 +18,7 @@ Speed Test is a plugin for [Decky](https://github.com/SteamDeckHomebrew/decky-lo
 ## 💪 Todo
 
 - [x] Add ability to toggle between Mbps and MBs
-- [ ] Add ability to view all performed speed tests in a paginated form
+- [x] Add ability to view all performed speed tests in a paginated form
 - [x] onClick popup with description for speed test metrics
 
 ## ⭕️ Known issues

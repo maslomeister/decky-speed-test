@@ -7,7 +7,7 @@ import {
 import { Stats } from "../components/stats";
 import { VFC, useEffect, useState } from "react";
 import { Backend, LatestResultFetch } from "../app/backend";
-import { SETTINGS_ROUTE, navigateToPage } from "./navigation";
+import { SETTINGS_ROUTE, VIEW_ALL_TESTS, navigateToPage } from "./navigation";
 
 type Props = {
   backend: Backend;
@@ -56,9 +56,16 @@ export const Main: VFC<Props> = ({ backend }: Props) => {
       </PanelSection>
 
       <PanelSection title="MISC">
-        {/* <PanelSectionRow>
-          <ButtonItem layout="below">PREVIOUS TESTS</ButtonItem>
-        </PanelSectionRow> */}
+        <PanelSectionRow>
+          <ButtonItem
+            layout="below"
+            onClick={() => {
+              navigateToPage(VIEW_ALL_TESTS);
+            }}
+          >
+            PREVIOUS TESTS
+          </ButtonItem>
+        </PanelSectionRow>
 
         <PanelSectionRow>
           <ButtonItem

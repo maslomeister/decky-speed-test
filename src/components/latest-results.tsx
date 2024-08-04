@@ -140,7 +140,7 @@ export const LatestResults = ({ results }: Props) => {
                 </div>
               </HorizontalContainer>
             </HorizontalContainer>
-            <div style={{ fontSize: "12px" }}>
+            <div style={{ fontSize: "12px", alignItems: "baseline" }}>
               {settings.bitsPerSecond ? "Mbps" : "MBs"}
             </div>
           </HorizontalContainer>

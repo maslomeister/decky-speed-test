@@ -124,3 +124,12 @@ class Plugin:
         except Exception as e:
             logger.exception(f"Unhandled exception: {e}")
             return e
+
+    async def fetch_paginated_results(self, start_index: int, amount: int):
+        try:
+            results = self.dao.fetchPaginatedResults(start_index, amount)
+
+            return {"data": results[0], "has_more": results[1]}
+        except Exception as e:
+            logger.exception(f"Unhandled exception: {e}")
+            return e

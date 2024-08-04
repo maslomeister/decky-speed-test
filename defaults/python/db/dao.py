@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 import datetime
+import json
 import sqlite3
+from typing import List, Tuple
 
 
 from python.db.sqlite_db import SqlLiteDb
@@ -14,6 +16,17 @@ class LatestResults:
     latency: int
     jitter: int
     network_name: str
+
+
+@dataclass
+class PaginatedResult:
+    date_time: str
+    down: int
+    up: int
+    latency: int
+    jitter: int
+    network_name: str
+    aim_scores: str
 
 
 class Dao:
@@ -89,3 +102,48 @@ class Dao:
         ).fetchone()
 
         return result
+
+    def fetchPaginatedResults(
+        self, start_index: int, amount: int
+    ) -> Tuple[List[PaginatedResult], bool]:
+        with self._db.transactional() as connection:
+            return self._fetchPaginatedResults(start_index, amount, connection)
+
+    def _fetchPaginatedResults(
+        self,
+        start_index: int,
+        amount: int,
+        connection: sqlite3.Connection,
+    ) -> Tuple[List[PaginatedResult], bool]:
+        query = """
+            SELECT date_time, down, up, latency, jitter, network_name, aim_scores
+            FROM results
+            ORDER BY date_time DESC
+            LIMIT ? OFFSET ?
+        """
+        result_tuples = connection.execute(query, (amount, start_index)).fetchall()
+
+        additional_query = """
+            SELECT 1
+            FROM results
+            ORDER BY date_time DESC
+            LIMIT 1 OFFSET ?
+        """
+        additional_rows = connection.execute(
+            additional_query, (start_index + amount,)
+        ).fetchall()
+        has_more = len(additional_rows) > 0
+
+        results = [
+            {
+                "date_time": row[0],
+                "down": row[1],
+                "up": row[2],
+                "latency": row[3],
+                "jitter": row[4],
+                "network_name": row[5],
+                "aim_scores": json.loads(row[6]),
+            }
+            for row in result_tuples
+        ]
+        return results, has_more
