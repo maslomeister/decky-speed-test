@@ -1,6 +1,6 @@
 {
   "name": "decky-speed-test",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Decky plugin to measure internet speed of your steam deck using speedtest by cloudflare",
   "type": "module",
   "scripts": {
