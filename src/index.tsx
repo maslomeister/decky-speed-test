@@ -4,22 +4,15 @@ import { Main } from "./pages/main";
 import SpeedTestEngine from "@cloudflare/speedtest";
 
 import { Backend } from "./app/backend";
-// import { VFC } from "react";
-
-// const DeckyPluginRouterTest: VFC = () => {
-//   return (
-//     <div style={{ marginTop: "50px", color: "white" }}
-//       Hello World!
-//       <DialogButton onClick={() => Navigation.NavigateToLibraryTab()}>
-//         Go to Library
-//       </DialogButton>
-//     </div>
-//   );
-// };
+import { Settings } from "./app/settings";
+import { LocatorProvider } from "./components/locator";
+import { SETTINGS_ROUTE } from "./pages/navigation";
+import { SettingsPage } from "./pages/settings";
 
 export default definePlugin((serverAPI: ServerAPI) => {
   const engine = new SpeedTestEngine({ autoStart: false });
   const backend = new Backend(engine, serverAPI);
+  const settings = new Settings();
 
   backend.saveResultsOnFinish(
     () => {
@@ -42,31 +35,22 @@ export default definePlugin((serverAPI: ServerAPI) => {
     }
   );
 
-  // const DeckyPluginRouterTest: VFC = () => {
-  //   return (
-  //     <div style={{ marginTop: "50px", color: "white" }}>
-  //       Hello World!
-  //       <DialogButton onClick={() => Navigation.NavigateToLibraryTab()}>
-  //         Go to Library
-  //       </DialogButton>
-  //     </div>
-  //   );
-  // };
-
-  // serverAPI.routerHook.addRoute(
-  //   "/decky-speed-test/download",
-  //   DeckyPluginRouterTest,
-  //   {
-  //     exact: true,
-  //   }
-  // );
+  serverAPI.routerHook.addRoute(SETTINGS_ROUTE, () => (
+    <LocatorProvider settings={settings}>
+      <SettingsPage />
+    </LocatorProvider>
+  ));
 
   return {
     title: <div className={staticClasses.Title}>Speed Test</div>,
-    content: <Main backend={backend} />,
+    content: (
+      <LocatorProvider settings={settings}>
+        <Main backend={backend} />
+      </LocatorProvider>
+    ),
     icon: <SiSpeedtest />,
     onDismount() {
-      // serverAPI.routerHook.removeRoute("/decky-speed-test");
+      serverAPI.routerHook.removeRoute(SETTINGS_ROUTE);
     },
   };
 });

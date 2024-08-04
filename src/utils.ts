@@ -28,6 +28,14 @@ export function convertBpsToMbps(bps: number): number {
   return Math.round(bps / 1000000); // 1 Mbps = 1,000,000 bps
 }
 
+export function convertBpsToMBs(bps: number): number {
+  return parseFloat((bps / 8000000).toFixed(1)); // 1 MB/s = 8,000,000 bps
+}
+
+export function convertMbpsToMBs(mbps: number): number {
+  return parseFloat((mbps / 8).toFixed(1)); // 1 MB/s = 8 Mbps
+}
+
 export function getColor(value: number): string {
   if (value < 2) {
     return "#FF6557";
@@ -43,3 +51,48 @@ export function getColor(value: number): string {
 
   return "#ffffff";
 }
+
+// credits to https://github.com/ma3a/SDH-PlayTime
+
+export const log = (...args: any[]) => {
+  console.log(
+    `%c SpeedTest %c`,
+    "background: #16a085; color: black;",
+    "background: #1abc9c; color: black;",
+    ...args
+  );
+};
+
+export const debug = (...args: any[]) => {
+  console.debug(
+    `%c SpeedTest %c`,
+    "background: #16a085; color: black;",
+    "background: #1abc9c; color: black;",
+    ...args
+  );
+};
+
+export const error = (...args: any[]) => {
+  console.error(
+    `%c SpeedTest %c`,
+    "background: #16a085; color: black;",
+    "background: #FF0000;",
+    ...args
+  );
+};
+
+let logger = {
+  info: (...args: any[]) => {
+    log(...args);
+  },
+
+  debug: (...args: any[]) => {
+    debug(...args);
+  },
+
+  error: (...args: any[]) => {
+    error(...args);
+  },
+};
+
+export default logger;

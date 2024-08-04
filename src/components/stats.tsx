@@ -12,7 +12,8 @@ import { FaInfoCircle } from "react-icons/fa";
 import { VerticalContainer } from "./vertical-container";
 import { Backend, LatestResultFetch } from "../app/backend";
 import { LatestResults } from "./latest-results";
-import { convertBpsToMbps, getColor } from "../utils";
+import { convertBpsToMBs, convertBpsToMbps, getColor } from "../utils";
+import { useLocator } from "./locator";
 
 type AIM = {
   name: string;
@@ -26,6 +27,8 @@ type Props = {
 };
 
 export const Stats = ({ backend }: Props) => {
+  const { currentSettings: settings } = useLocator();
+
   const [startTest, setStartTest] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
@@ -57,10 +60,18 @@ export const Stats = ({ backend }: Props) => {
         const jitterUp = backend.engine.results.getUpLoadedJitter();
 
         if (download) {
-          setDownload(convertBpsToMbps(download));
+          setDownload(
+            settings.bitsPerSecond
+              ? convertBpsToMbps(download)
+              : convertBpsToMBs(download)
+          );
         }
         if (upload) {
-          setUpload(convertBpsToMbps(upload));
+          setUpload(
+            settings.bitsPerSecond
+              ? convertBpsToMbps(upload)
+              : convertBpsToMBs(upload)
+          );
         }
         if (latencyDown && latencyUp) {
           setLatency(Math.round((latencyDown + latencyUp) / 2));
@@ -104,9 +115,17 @@ export const Stats = ({ backend }: Props) => {
           downLoadedLatency > 0 &&
           upLoadedLatency > 0
         ) {
-          setDownload(convertBpsToMbps(download));
+          setDownload(
+            settings.bitsPerSecond
+              ? convertBpsToMbps(download)
+              : convertBpsToMBs(download)
+          );
 
-          setUpload(convertBpsToMbps(upload));
+          setUpload(
+            settings.bitsPerSecond
+              ? convertBpsToMbps(upload)
+              : convertBpsToMBs(upload)
+          );
 
           setLatency(Math.round((downLoadedLatency + upLoadedLatency) / 2));
 
@@ -156,17 +175,21 @@ export const Stats = ({ backend }: Props) => {
     }
   }, []);
 
-  const dlInMbps = dlPoints?.map((item) => {
+  const dlSpeed = dlPoints?.map((item) => {
     return {
       ...item,
-      bps: convertBpsToMbps(item.bps),
+      bps: settings.bitsPerSecond
+        ? convertBpsToMbps(item.bps)
+        : convertBpsToMBs(item.bps),
     };
   });
 
-  const upInMbps = upPoints?.map((item) => {
+  const upSpeed = upPoints?.map((item) => {
     return {
       ...item,
-      bps: convertBpsToMbps(item.bps),
+      bps: settings.bitsPerSecond
+        ? convertBpsToMbps(item.bps)
+        : convertBpsToMBs(item.bps),
     };
   });
 
@@ -239,12 +262,14 @@ export const Stats = ({ backend }: Props) => {
               }}
             >
               {download && (
-                <div style={{ fontWeight: 600 }}>{download} Mbps</div>
+                <div style={{ fontWeight: 600 }}>
+                  {download ?? "?"} {settings.bitsPerSecond ? "Mbps" : "MBs"}
+                </div>
               )}
             </Field>
           </PanelSectionRow>
-          {isRunning && dlInMbps && dlInMbps.length > 2 && (
-            <Graph data={dlInMbps} />
+          {isRunning && dlSpeed && dlSpeed.length > 2 && (
+            <Graph data={dlSpeed} />
           )}
           <PanelSectionRow>
             <Field
@@ -275,12 +300,14 @@ export const Stats = ({ backend }: Props) => {
               }}
             >
               {upload && (
-                <div style={{ fontWeight: 600 }}>{upload ?? "?"} Mbps</div>
+                <div style={{ fontWeight: 600 }}>
+                  {upload ?? "?"} {settings.bitsPerSecond ? "Mbps" : "MBs"}
+                </div>
               )}
             </Field>
           </PanelSectionRow>
-          {isRunning && upInMbps && upInMbps.length > 2 && (
-            <Graph data={upInMbps} type="up" />
+          {isRunning && upSpeed && upSpeed.length > 2 && (
+            <Graph data={upSpeed} type="up" />
           )}
           <PanelSectionRow>
             <Field

@@ -1,7 +1,13 @@
-import { PanelSection, Spinner } from "decky-frontend-lib";
+import {
+  ButtonItem,
+  PanelSection,
+  PanelSectionRow,
+  Spinner,
+} from "decky-frontend-lib";
 import { Stats } from "../components/stats";
 import { VFC, useEffect, useState } from "react";
 import { Backend, LatestResultFetch } from "../app/backend";
+import { SETTINGS_ROUTE, navigateToPage } from "./navigation";
 
 type Props = {
   backend: Backend;
@@ -49,15 +55,22 @@ export const Main: VFC<Props> = ({ backend }: Props) => {
         <Stats backend={backend} />
       </PanelSection>
 
-      {/* <PanelSection title="MISC">
-        <PanelSectionRow>
+      <PanelSection title="MISC">
+        {/* <PanelSectionRow>
           <ButtonItem layout="below">PREVIOUS TESTS</ButtonItem>
-        </PanelSectionRow>
+        </PanelSectionRow> */}
 
         <PanelSectionRow>
-          <ButtonItem layout="below">SETTINGS</ButtonItem>
+          <ButtonItem
+            layout="below"
+            onClick={() => {
+              navigateToPage(SETTINGS_ROUTE);
+            }}
+          >
+            SETTINGS
+          </ButtonItem>
         </PanelSectionRow>
-      </PanelSection> */}
+      </PanelSection>
     </>
   );
 };

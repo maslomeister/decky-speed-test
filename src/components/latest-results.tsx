@@ -8,15 +8,18 @@ import { TbWorldUpload, TbWorldDownload } from "react-icons/tb";
 import { LatestResult } from "../app/backend";
 import { HorizontalContainer } from "./horizontal-container";
 import { useMemo } from "react";
-import { compareDateToNow } from "../utils";
+import { compareDateToNow, convertMbpsToMBs } from "../utils";
 import { FaInfoCircle } from "react-icons/fa";
 import { unstyled_p } from "../styles";
+import { useLocator } from "./locator";
 
 type Props = {
   results: LatestResult;
 };
 
 export const LatestResults = ({ results }: Props) => {
+  const { currentSettings: settings } = useLocator();
+
   const date = useMemo(() => {
     return compareDateToNow(results.date_time);
   }, [results.date_time]);
@@ -122,14 +125,24 @@ export const LatestResults = ({ results }: Props) => {
             <HorizontalContainer style={{ gap: "4px" }}>
               <HorizontalContainer>
                 <TbWorldDownload color="#f6821f" />
-                <div>{results.down}</div>
+                <div>
+                  {settings.bitsPerSecond
+                    ? results.down
+                    : convertMbpsToMBs(results.down)}
+                </div>
               </HorizontalContainer>
               <HorizontalContainer>
                 <TbWorldUpload color="#8d1eb1" />
-                <div>{results.up}</div>
+                <div>
+                  {settings.bitsPerSecond
+                    ? results.up
+                    : convertMbpsToMBs(results.up)}
+                </div>
               </HorizontalContainer>
             </HorizontalContainer>
-            <div style={{ fontSize: "12px" }}>Mbps</div>
+            <div style={{ fontSize: "12px" }}>
+              {settings.bitsPerSecond ? "Mbps" : "MBs"}
+            </div>
           </HorizontalContainer>
         </Field>
       </PanelSectionRow>
